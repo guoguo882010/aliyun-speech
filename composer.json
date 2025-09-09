@@ -1,0 +1,16 @@
+{
+  "name": "guoguo882010/aliyun-speech",
+  "description": "阿里云语音识别",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": ">=7.1",
+    "alibabacloud/speechfiletranscriberlite-20211221": "^7.0",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "RSHDSDK\\ALiYunSpeech\\": "src/"
+    }
+  }
+}
