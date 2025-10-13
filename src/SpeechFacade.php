@@ -3,7 +3,6 @@
 namespace RSHDSDK\ALiYunSpeech;
 
 use AlibabaCloud\SDK\SpeechFileTranscriberLite\V20211221\Models\GetTaskResultRequest;
-use AlibabaCloud\SDK\SpeechFileTranscriberLite\V20211221\Models\GetTaskResultResponseBody\result;
 use AlibabaCloud\SDK\SpeechFileTranscriberLite\V20211221\Models\SubmitTaskRequest;
 use AlibabaCloud\SDK\SpeechFileTranscriberLite\V20211221\SpeechFileTranscriberLite;
 use Exception;
@@ -65,10 +64,10 @@ class SpeechFacade
      * 提交任务
      * @param string $audio 文件地址
      * @param string $call_back 回调地址
-     * @return string 任务ID
+     * @return array 任务ID 和请求ID
      * @throws Exception
      */
-    public function submitTask(string $audio, string $call_back): string
+    public function submitTask(string $audio, string $call_back): array
     {
         if (empty($audio)) {
             throw new Exception('音频文件地址不能为空');
@@ -93,7 +92,7 @@ class SpeechFacade
             $submitResponse = $this->client->submitTask($request);
 
             if (21050000 == $submitResponse->body->statusCode) {
-                return $submitResponse->body->taskId;
+                return ['task_id' => $submitResponse->body->taskId, 'request_id' => $submitResponse->body->requestId];
             } else {
                 throw new Exception('异常：' . $submitResponse->body->statusCode . ', ' . $submitResponse->body->statusText);
             }
@@ -105,10 +104,10 @@ class SpeechFacade
     /**
      * 查询任务结果
      * @param string $task_id 任务ID
-     * @return result
+     * @return array
      * @throws Exception
      */
-    public function searchTask(string $task_id): result
+    public function searchTask(string $task_id): array
     {
         try {
             if (empty($task_id)) {
@@ -119,7 +118,7 @@ class SpeechFacade
             $request->taskId = $task_id;
             $getResponse     = $this->client->getTaskResult($request);
             if (21050000 == $getResponse->body->statusCode) {
-                return $getResponse->body->result;
+                return ['SolveTime'=>$getResponse->body->solveTime,'Sentences'=>$getResponse->body->result->sentences] ;
             } else {
                 throw new Exception('异常：' . $getResponse->body->statusCode . ', ' . $getResponse->body->statusText);
             }

@@ -26,20 +26,20 @@ $config = [
 
 $speech = new \RSHDSDK\ALiYunSpeech\SpeechFacade($config);
 
-//提交转文字任务，返回任务ID
+//提交转文字任务，返回数组包含任务ID和请求ID
 $speech->submitTask('音频地址（可下载的）','回调通知地址');
 
-//主动查询任务结果
+//主动查询任务结果，返回数据 包含完成时间和翻译文字句子结果
 $speech->searchTask('任务ID');
 
 或者
 
 use \RSHDSDK\ALiYunSpeech;
 
-//提交转文字任务，返回任务ID
+//提交转文字任务，返回数组包含任务ID和请求ID
 SpeechFacade::instance($config)->submitTask('音频地址（可下载的）','回调通知地址');
 
-//主动查询任务结果
+//主动查询任务结果 ，返回数据 包含完成时间和翻译文字句子结果
 SpeechFacade::instance($config)->searchTask('任务ID');
 
 
