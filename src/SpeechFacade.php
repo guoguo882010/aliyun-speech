@@ -5,6 +5,7 @@ namespace RSHDSDK\ALiYunSpeech;
 use AlibabaCloud\SDK\SpeechFileTranscriberLite\V20211221\Models\GetTaskResultRequest;
 use AlibabaCloud\SDK\SpeechFileTranscriberLite\V20211221\Models\SubmitTaskRequest;
 use AlibabaCloud\SDK\SpeechFileTranscriberLite\V20211221\SpeechFileTranscriberLite;
+use Darabonba\OpenApi\Models\Config;
 use Exception;
 
 class SpeechFacade
@@ -46,12 +47,17 @@ class SpeechFacade
             throw new Exception(' appkey 不能为空');
         }
 
-        $this->config = $config;
-        $this->appkey = $app_key;
-
+        $this->config             = $config;
+        $this->appkey             = $app_key;
         $this->config['endpoint'] = strtolower($config['endpoint']);//转换为小写
 
-        $this->client = new SpeechFileTranscriberLite($this->config);
+        $ali_config                  = new Config();
+        $ali_config->accessKeyId     = $this->config ['access_key_id'];      //获取AccessKey ID和AccessKey Secret请前往控制台：https://ram.console.aliyun.com/manage/ak
+        $ali_config->accessKeySecret = $this->config ['access_key_secret'];
+        $ali_config->regionId        = $this->config ['region_id'];
+        $ali_config->endpoint        = $this->config ['endpoint'];
+        $this->client                = new SpeechFileTranscriberLite($ali_config);
+
     }
 
     public static function instance($config)
@@ -118,7 +124,7 @@ class SpeechFacade
             $request->taskId = $task_id;
             $getResponse     = $this->client->getTaskResult($request);
             if (21050000 == $getResponse->body->statusCode) {
-                return ['SolveTime'=>$getResponse->body->solveTime,'Sentences'=>$getResponse->body->result->sentences] ;
+                return ['SolveTime' => $getResponse->body->solveTime, 'Sentences' => $getResponse->body->result->sentences];
             } else {
                 throw new Exception('异常：' . $getResponse->body->statusCode . ', ' . $getResponse->body->statusText);
             }
