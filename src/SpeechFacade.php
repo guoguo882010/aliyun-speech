@@ -86,6 +86,7 @@ class SpeechFacade
         $task['file_link']                   = $audio;
         $task['version']                     = '4.0';
         $task['enable_words']                = false;
+        $task['auto_split']                  = true;
         $task['enable_sample_rate_adaptive'] = true;
         $task['enable_callback']             = true;
         $task['callback_url']                = $call_back;
